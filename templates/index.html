@@ -27,7 +27,7 @@
                     <div id="questions-list" class="question-list">
                         {{block "question-list" .}}
                         <div class="space-y-8">
-                            {{range $index, $question := .}}
+                            {{range $question := .}}
                             <div class="question bg-gray-50 p-6 rounded-lg">
                                 <h3 class="text-xl font-semibold text-gray-900 mb-4">{{$question.Title}}</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
@@ -35,15 +35,16 @@
                                     <button
                                         class="w-full text-left px-4 py-3 rounded-md bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-150"
                                         hx-post="/check-answer"
-                                        hx-vals='{"question_index": "{{$index}}", "option": "{{$optIndex}}"}'
-                                        hx-target="#response-{{$index}}"
+                                        hx-vals='{"question_index": "{{$question.ID}}", "option": "{{$optIndex}}"}'
+                                        hx-target="#response-{{$question.ID}}"
                                     >
                                         {{$option.Text}}
                                     </button>
                                     {{end}}
                                 </div>
-                                <div id="response-{{$index}}"></div>
+                                <div id="response-{{$question.ID}}"></div>
                             </div>
+                    
                             {{end}}
                         </div>
                         {{end}}
