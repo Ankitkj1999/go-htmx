@@ -64,8 +64,8 @@ func main() {
 	http.HandleFunc("/submit-question", handleSubmitQuestion)
 	http.HandleFunc("/check-answer", handleCheckAnswer)
 
-	log.Println("Server starting on :8084...")
-	log.Fatal(http.ListenAndServe(":8084", nil))
+	log.Println("Server starting on :8085...")
+	log.Fatal(http.ListenAndServe(":8085", nil))
 }
 
 func initDB() error {
