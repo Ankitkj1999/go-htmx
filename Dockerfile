@@ -1,5 +1,5 @@
 # Dockerfile
-FROM golang:1.21-alpine
+FROM golang:1.22-alpine
 
 WORKDIR /app
 
@@ -21,5 +21,4 @@ EXPOSE 8085
 
 # Run the application
 CMD ["./main"]
-
 
