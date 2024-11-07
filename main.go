@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	_ "github.com/lib/pq"
@@ -25,18 +26,24 @@ type Question struct {
 }
 
 // Database connection string
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "your_password"
-	dbname   = "quiz_db"
-)
+// const (
+// 	host     = "localhost"
+// 	port     = 5432
+// 	user     = "postgres"
+// 	password = "your_password"
+// 	dbname   = "quiz_db"
+// )
 
 var db *sql.DB
 
 func main() {
 	// Initialize database connection
+	host := os.Getenv("DB_HOST")
+	port, _ := strconv.Atoi(os.Getenv("DB_PORT"))
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
+
 	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 

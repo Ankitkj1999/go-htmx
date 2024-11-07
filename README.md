@@ -2,7 +2,7 @@
 
 A lightweight quiz application built with Go and HTMX that allows users to create, manage, and take quizzes in real-time. The application demonstrates rapid development and simple interactivity without complex JavaScript frameworks.
 
-![Demo](assets/demo.gif)
+![Demo](assets/demoNew.gif)
 
 ## Technologies Used
 
