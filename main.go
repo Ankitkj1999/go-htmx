@@ -10,6 +10,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -27,16 +28,74 @@ type Question struct {
 
 // Database connection string
 // const (
-// 	host     = "localhost"
-// 	port     = 5432
-// 	user     = "postgres"
-// 	password = "your_password"
-// 	dbname   = "quiz_db"
+//
+//	host     = "localhost"
+//	port     = 5432
+//	user     = "postgres"
+//	password = "your_password"
+//	dbname   = "quiz_db"
+//
 // )
-
 var db *sql.DB
 
+// func main() {
+// 	// Load environment variables from .env file
+// 	err := godotenv.Load()
+// 	if err != nil {
+// 		log.Fatal("Error loading .env file")
+// 	}
+
+// 	// Initialize database connection
+// 	host := os.Getenv("DB_HOST")
+// 	port, _ := strconv.Atoi(os.Getenv("DB_PORT"))
+// 	user := os.Getenv("DB_USER")
+// 	password := os.Getenv("DB_PASSWORD")
+// 	dbname := os.Getenv("DB_NAME")
+
+// 	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+// 		host, port, user, password, dbname)
+
+// 	db, dbErr := sql.Open("postgres", connStr)
+// 	if dbErr != nil {
+// 		log.Fatal("Error connecting to database:", dbErr)
+// 	}
+// 	defer db.Close()
+
+// 	// Test the connection
+// 	err = db.Ping()
+// 	if err != nil {
+// 		log.Fatal("Error connecting to the database:", err)
+// 	}
+
+// 	// Initialize database schema
+// 	err = initDB()
+// 	if err != nil {
+// 		log.Fatal("Error initializing database:", err)
+// 	}
+
+// 	// Serve static files
+// 	fs := http.FileServer(http.Dir("static"))
+// 	http.Handle("/static/", http.StripPrefix("/static/", fs))
+// 	http.Handle("/manifest.json", fs)
+// 	http.Handle("/sw.js", fs)
+// 	http.Handle("/offline.html", fs)
+
+// 	// Routes
+// 	http.HandleFunc("/", handleHome)
+// 	http.HandleFunc("/submit-question", handleSubmitQuestion)
+// 	http.HandleFunc("/check-answer", handleCheckAnswer)
+
+// 	log.Println("Server starting on :8085...")
+// 	log.Fatal(http.ListenAndServe(":8085", nil))
+// }
+
 func main() {
+	// Load environment variables from .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	// Initialize database connection
 	host := os.Getenv("DB_HOST")
 	port, _ := strconv.Atoi(os.Getenv("DB_PORT"))
@@ -47,10 +106,10 @@ func main() {
 	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 
-	var err error
-	db, err = sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal("Error connecting to database:", err)
+	var dbErr error
+	db, dbErr = sql.Open("postgres", connStr) // assign to package-level `db`
+	if dbErr != nil {
+		log.Fatal("Error connecting to database:", dbErr)
 	}
 	defer db.Close()
 
@@ -66,13 +125,20 @@ func main() {
 		log.Fatal("Error initializing database:", err)
 	}
 
+	// Serve static files
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.Handle("/manifest.json", fs)
+	http.Handle("/sw.js", fs)
+	http.Handle("/offline.html", fs)
+
 	// Routes
 	http.HandleFunc("/", handleHome)
 	http.HandleFunc("/submit-question", handleSubmitQuestion)
 	http.HandleFunc("/check-answer", handleCheckAnswer)
 
-	log.Println("Server starting on :8085...")
-	log.Fatal(http.ListenAndServe(":8085", nil))
+	log.Println("Server starting on :8080...")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func initDB() error {

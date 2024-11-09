@@ -43,3 +43,13 @@ Visit `http://localhost:8084` in your browser.
 ## Contributing
 
 Contributions are welcome! Feel free to submit issues, create pull requests, or propose new features to improve the application.
+
+
+## To-Do
+
+- [ ] Add user authentication
+- [ ] Implement quiz timer
+- [ ] Enhance UI with more TailwindCSS components
+- [ ] Write unit tests for the backend
+- [ ] Add more quiz question types (e.g., multiple choice, true/false)
+- [ ] Improve error handling and validation

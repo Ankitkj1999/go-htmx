@@ -3,9 +3,58 @@
 <head>
     <title>Quiz App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4f46e5">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/icon-192x192.png">
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
+        // Handle offline form submissions
+        document.addEventListener('htmx:beforeRequest', function(evt) {
+            if (!navigator.onLine) {
+                evt.preventDefault();
+                // Store the form data in IndexedDB
+                const formData = new FormData(evt.detail.elt);
+                // Request background sync
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.sync.register('sync-questions');
+                });
+                
+                // Show offline notification to user
+                alert('You are offline. Your question will be submitted when you are back online.');
+            }
+        });
+
+        // Online/offline status handling
+        window.addEventListener('online', function() {
+            document.body.classList.remove('offline');
+            // Trigger sync when back online
+            navigator.serviceWorker.ready.then(registration => {
+                registration.sync.register('sync-questions');
+            });
+        });
+
+        window.addEventListener('offline', function() {
+            document.body.classList.add('offline');
+        });
+    </script>
     <style>
+        .offline .online-only {
+            display: none;
+        }
         .htmx-indicator{
             opacity:0;
             transition: opacity 200ms ease-in;
@@ -17,7 +66,6 @@
             opacity:1
         }
     </style>
-</head>
 <body class="h-full">
     <div class="min-h-full">
         <main class="py-6 sm:py-10">
